@@ -1,27 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Iniciar Sesión</title>
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <header>
-        <h1>Welcome to the Home Page</h1>
-    </header>
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-            <li><a href="{% url 'contact' %}">Contact</a></li>
-        </ul>
-    </nav>
-    <main>
-        <p>This is the home page of the website.</p>
-    </main>
-    <footer>
-        <p>&copy; 2023 Your Company</p>
-    </footer>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="id_username">Usuario:</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            <div class="input-group">
+                <label for="id_password">Contraseña:</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit" class="btn">Ingresar</button>
+        </form>
+    </div>
 </body>
 </html>

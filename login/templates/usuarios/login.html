@@ -1,5 +1,13 @@
 <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Iniciar sesión</button>
-</form>
+    {% if user.is_authenticated %}
+    <p>Ya estás autenticado. <a href="{% url 'home' %}">Ir a Home</a></p>
+{% else %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Iniciar sesión</button>
+    </form>
+{% endif %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">

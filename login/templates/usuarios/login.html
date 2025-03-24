@@ -1,13 +1,49 @@
-<form method="post">
-    {% if user.is_authenticated %}
-    <p>Ya estás autenticado. <a href="{% url 'home' %}">Ir a Home</a></p>
-{% else %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Iniciar sesión</button>
-    </form>
-{% endif %}
-
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ventas y Distribución - Login</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2><i class="fas fa-store-alt"></i> Sistema de Ventas</h2>
+        
+        <!-- Mensajes de error -->
+        {% if messages %}
+        <div class="error-message">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Comprobación si el usuario ya está autenticado -->
+        {% if user.is_authenticated %}
+            <p>Ya estás autenticado. <a href="{% url 'home' %}">Ir a Home</a></p>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="id_username">Usuario:</label>
+                    <input type="text" name="username" id="id_username" placeholder="Ingrese su nombre de usuario" required>
+                </div>
+                <div class="input-group">
+                    <label for="id_password">Contraseña:</label>
+                    <input type="password" name="password" id="id_password" placeholder="Ingrese su contraseña" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

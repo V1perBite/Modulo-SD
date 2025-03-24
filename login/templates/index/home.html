@@ -4,25 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Sistema de Ventas y Distribución - Inicio</title>
+    <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-group">
-                <label for="id_username">Usuario:</label>
-                <input type="text" name="username" id="id_username" required>
+    <div class="navbar">
+        <div class="logo">
+            <i class="fas fa-store-alt"></i> Sistema de Ventas
+        </div>
+        <div class="nav-links">
+            <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="#"><i class="fas fa-shopping-cart"></i> Ventas</a>
+            <a href="#"><i class="fas fa-box"></i> Productos</a>
+            <a href="#"><i class="fas fa-users"></i> Clientes</a>
+            <a href="#"><i class="fas fa-truck"></i> Distribución</a>
+        </div>
+        <div class="user-menu">
+            <span>Bienvenido, {{ user.username }}</span>
+            <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Bienvenido al Sistema de Ventas y Distribución</h1>
+        <div class="dashboard-cards">
+            <div class="card">
+                <i class="fas fa-chart-line"></i>
+                <h2>Ventas del día</h2>
+                <p>$0.00</p>
             </div>
-            <div class="input-group">
-                <label for="id_password">Contraseña:</label>
-                <input type="password" name="password" id="id_password" required>
+            <div class="card">
+                <i class="fas fa-box"></i>
+                <h2>Productos</h2>
+                <p>0</p>
             </div>
-            <button type="submit" class="btn">Ingresar</button>
-        </form>
+            <div class="card">
+                <i class="fas fa-users"></i>
+                <h2>Clientes</h2>
+                <p>0</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-truck"></i>
+                <h2>Entregas pendientes</h2>
+                <p>0</p>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -31,12 +31,39 @@ class Producto(models.Model):
         
         
 class  Categoria(models.Model):
-    pass
+    name = models.CharField('Nombre de la categoría', max_length=100)
+    descripcion = models.TextField('Descripción de la categoría', blank=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Categoría'
+        verbose_name_plural = 'Categorías'
 
 class Entry(models.Model):
-    pass
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='entradas')
+    cantidad = models.IntegerField('Cantidad de unidades')
+    fecha = models.DateTimeField('Fecha de entrada', auto_now_add=True)
+    observaciones = models.TextField('Observaciones', blank=True)
+    
+    def save(self, *args, **kwargs):
+        self.producto.stock += self.cantidad
+        self.producto.save()
+        super().save(*args, **kwargs)
+    def __str__(self):
+        return f'Entrada de {self.cantidad} unidades de {self.producto.nombre}'
 
 class Proveedor(models.Model):
-    pass
+    nombre = models.CharField('Nombre del proveedor', max_length=100)
+    direccion = models.CharField('Dirección del proveedor', max_length=200)
+    telefono = models.CharField('Teléfono del proveedor', max_length=15)
+    email = models.EmailField('Email del proveedor', blank=True)
+    def __str__(self):
+        return self.nombre
+    
+    class Meta:
+        verbose_name = 'Proveedor'
+        verbose_name_plural = 'Proveedores'
 
 

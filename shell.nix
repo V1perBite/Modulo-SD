@@ -4,6 +4,7 @@ pkgs.mkShell rec {
   buildInputs = [
     pkgs.python310Full           # Python 3.10
     pkgs.python310Packages.pip   # pip para gestionar las dependencias
+    pkgs.python310Packages.django
   ];
 
   shellHook = ''

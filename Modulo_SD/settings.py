@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'login',
+    'ventas',
+    'inventario',
+    'distribucion',
 ]
 
 MIDDLEWARE = [
@@ -76,11 +78,14 @@ WSGI_APPLICATION = 'Modulo_SD.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # o 'mysql.connector.django' si usaste mysql-connector
+        'NAME': 'modulo',
+        'USER': 'django_user',
+        'PASSWORD': '12345678',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

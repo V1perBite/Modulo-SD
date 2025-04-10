@@ -1,1 +1,19 @@
-Django >= 5.2
+# Requisitos principales
+Django>=4.2,<5.0
+
+# Para manejar variables de entorno (útil si usas .env)
+python-decouple
+
+# Testing
+pytest
+pytest-django
+
+# Para el formateo de código (opcional pero recomendado)
+black
+flake8
+
+# Soporte para bases de datos como PostgreSQL (si la usas)
+psycopg2-binary
+
+# Otras herramientas útiles (ajusta según tu stack)
+djangorestframework 

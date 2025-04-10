@@ -1,0 +1,12 @@
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell rec {
+  buildInputs = [
+    pkgs.python310Full
+    pkgs.python310Packages.pip
+  ];
+
+  shellHook = ''
+    export PYTHONPATH=$PYTHONPATH:${toString pkgs.python310.sitePackages}
+  '';
+}

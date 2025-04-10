@@ -1,0 +1,14 @@
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell rec {
+  buildInputs = [
+    pkgs.python310Full          # Utiliza Python 3.10
+    pkgs.python310Packages.pip  # Instala pip para gestionar las librerías
+  ];
+
+  shellHook = ''
+    export PYTHONPATH=$PYTHONPATH:${toString pkgs.python310.sitePackages}
+  '';
+}
+
+

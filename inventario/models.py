@@ -15,6 +15,7 @@ class Producto(models.Model):
     precio_venta = models.DecimalField('Precio de venta del producto', max_digits=10, decimal_places=2)
     stock = models.IntegerField('Cantidad de unidades', default=0)
     fecha_creacion = models.DateTimeField('Fecha de creación', auto_now_add=True)
+    
 
     def __str__(self):
         return self.nombre

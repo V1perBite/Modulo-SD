@@ -1,17 +1,14 @@
 from django.shortcuts import render
-from .forms import EntryForm, ProductoForm
+from .models import Producto, Entry
+from django.core.paginator import Paginator
 
+def listar_productos(request):
+    productos_list = Producto.objects.all()
+    paginator = Paginator(productos_list, 10)  # 10 productos por página
+    page_number = request.GET.get('page')
+    productos = paginator.get_page(page_number)
+    return render(request, 'inventario/listar_productos.html', {'productos': productos})
 
-def index(request):
-    if request.method == 'POST':
-        form = EntryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'inventario/index.html',{
-                "form": ProductoForm(),
-                "Message": "Entrada registrada correctamente"
-            } )
-            
-        else:
-            form = EntryForm()
-            return render(request, 'inventario/index.html',{'form': ProductoForm()})
+def historial_entradas(request):
+    entradas = Entry.objects.select_related('producto').order_by('-id')
+    return render(request, 'inventario/historial_entradas.html', {'entradas': entradas})

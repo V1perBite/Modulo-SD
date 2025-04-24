@@ -1,0 +1,33 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historial de Entradas</title>
+</head>
+<body>
+    <h1>Historial de Entradas</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entrada in entradas %}
+            <tr>
+                <td>{{ entrada.producto.nombre }}</td>
+                <td>{{ entrada.cantidad }}</td>
+                <td>{{ entrada.fecha }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No hay entradas registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import vista_reportes, ReporteArchivoAPIView
+from .views import  ReporteInventarioAPIView, frontend_reportes
 
 urlpatterns = [
-    path('nuevo_formulario/', vista_reportes, name='vista_reportes'),
-    path('api/reportes/', ReporteArchivoAPIView.as_view(), name='api-reportes'),
+    path('api/reportes/', ReporteInventarioAPIView.as_view(), name='api-reportes'),
+    path('reportes/', frontend_reportes, name='frontend-reportes'),
 
 ]

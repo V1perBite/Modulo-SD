@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generar Reporte</title>
+</head>
+<body>
+    <h1>Generar Reporte de Inventario</h1>
+    
+    <form id="formularioReporte">
+        <label for="formato">Formato:</label>
+        <select id="formato" name="formato">
+            <option value="excel">Excel</option>
+            <option value="pdf">PDF</option>
+        </select><br><br>
+
+        <label for="tipo_reporte">Tipo de Reporte:</label>
+        <select id="tipo_reporte" name="tipo_reporte">
+            <option value="productos">Productos</option>
+        </select><br><br>
+
+        <label for="fecha_inicio">Fecha inicio:</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio"><br><br>
+
+        <label for="fecha_fin">Fecha fin:</label>
+        <input type="date" id="fecha_fin" name="fecha_fin"><br><br>
+
+        <button type="submit">Generar</button>
+    </form>
+
+    <script>
+        document.getElementById('formularioReporte').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formato = document.getElementById('formato').value;
+            const tipo = document.getElementById('tipo_reporte').value;
+            const inicio = document.getElementById('fecha_inicio').value;
+            const fin = document.getElementById('fecha_fin').value;
+
+            const url = `/reportes/api/reportes/?formato=${formato}&tipo_reporte=${tipo}&fecha_inicio=${inicio}&fecha_fin=${fin}`;
+
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const enlace = document.createElement('a');
+                enlace.href = window.URL.createObjectURL(blob);
+                enlace.download = formato === 'excel' ? 'productos.xlsx' : 'productos.pdf';
+                enlace.click();
+            } else {
+                const data = await response.json();
+                alert('Error: ' + (data.error || 'Error al generar el reporte'));
+            }
+        });
+    </script>
+</body>
+</html>

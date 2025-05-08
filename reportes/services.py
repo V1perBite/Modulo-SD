@@ -1,77 +1,103 @@
 import openpyxl
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
-import io
+from inventario.models import Producto
 
-# ---- VENTAS ----
 
-def generar_reporte_ventas_excel(fecha_inicio, fecha_fin, region, producto):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Reporte de Ventas"
-    ws.append(["Fecha", "Producto", "Región", "Cantidad", "Total"])
-    ws.append(["2024-01-10", "MacBook", "Norte", 5, 10000])
-    ws.append(["2024-01-15", "iPhone", "Sur", 2, 3000])
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=ventas.xlsx'
-    wb.save(response)
+
+def generar_reporte_inventario_excel(fecha_inicio, fecha_fin):
+    # Crear un libro de trabajo y una hoja
+    libro = openpyxl.Workbook()
+    hoja = libro.active
+    hoja.title = 'Productos'
+
+    # Definir los encabezados
+    encabezados = ['ID', 'Nombre',  'Precio de compra', 'Precio de venta', 'Stock']
+    hoja.append(encabezados)
+
+    # Obtener todos los productos
+    productos = Producto.objects.all()
+
+    # Agregar los datos de los productos a la hoja
+    for producto in productos:
+        fila = [
+            producto.id,
+            producto.nombre,
+            producto.precio_compra,
+            producto.precio_venta,
+            producto.stock,
+        ]
+        hoja.append(fila)
+
+    # Guardar el archivo Excel
+    nombre_archivo = 'productos.xlsx'
+    libro.save(nombre_archivo)
+
+    # Devolver el archivo como respuesta HTTP
+    with open(nombre_archivo, 'rb') as archivo:
+        response = HttpResponse(archivo.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename={nombre_archivo}'
+        return response
+    
+def generar_reporte_inventario_pdf(fecha_inicio, fecha_fin):
+    # Crear un objeto HttpResponse con el tipo de contenido adecuado
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="productos.pdf"'
+
+    # Crear un objeto Canvas para generar el PDF
+    pdf = canvas.Canvas(response)
+
+    # Definir la posición inicial
+    x = 50
+    y = 800
+
+    # Escribir el título
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(x, y, "Reporte de Productos")
+    y -= 30
+
+    # Definir los encabezados
+    pdf.setFont("Helvetica-Bold", 12)
+    encabezados = ['ID', 'Nombre', 'Precio de compra', 'Precio de venta', 'Stock']
+    for i, encabezado in enumerate(encabezados):
+        pdf.drawString(x + i * 100, y, encabezado)
+    
+    y -= 20
+
+    # Obtener todos los productos
+    productos = Producto.objects.all()
+
+    # Agregar los datos de los productos al PDF
+    pdf.setFont("Helvetica", 12)
+    for producto in productos:
+        fila = [
+            str(producto.id),
+            producto.nombre,
+            str(producto.precio_compra),
+            str(producto.precio_venta),
+            str(producto.stock),
+        ]
+        for i, dato in enumerate(fila):
+            pdf.drawString(x + i * 100, y, dato)
+        y -= 20
+
+    # Finalizar el PDF
+    pdf.showPage()
+    pdf.save()
+
     return response
 
-def generar_reporte_ventas_pdf(fecha_inicio, fecha_fin, region, producto):
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer)
-    p.drawString(100, 800, "Reporte de Ventas")
-    p.drawString(100, 780, f"Producto: {producto}, Región: {region}")
-    p.drawString(100, 760, "Ejemplo de línea de ventas.")
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return HttpResponse(buffer, content_type='application/pdf')
 
-# ---- INVENTARIO ----
+def generar_reporte_ventas_pdf(fecha_inicio, fecha_fin):
+    # Implementar la lógica para generar el reporte de ventas en PDF
+    pass
+def generar_reporte_ventas_excel(fecha_inicio, fecha_fin):
+    # Implementar la lógica para generar el reporte de ventas en Excel
+    pass
 
-def generar_reporte_inventario_excel(fecha_inicio, fecha_fin, region, producto):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Reporte de Inventario"
-    ws.append(["Producto", "Stock Actual", "Ubicación"])
-    ws.append(["MacBook", 10, "Almacén Central"])
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=inventario.xlsx'
-    wb.save(response)
-    return response
-
-def generar_reporte_inventario_pdf(fecha_inicio, fecha_fin, region, producto):
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer)
-    p.drawString(100, 800, "Reporte de Inventario")
-    p.drawString(100, 780, f"Producto: {producto}, Región: {region}")
-    p.drawString(100, 760, "Stock actual simulado.")
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return HttpResponse(buffer, content_type='application/pdf')
-
-# ---- DISTRIBUCIÓN ----
-
-def generar_reporte_distribucion_excel(fecha_inicio, fecha_fin, region, producto):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Reporte de Distribución"
-    ws.append(["Fecha", "Producto", "Destino", "Cantidad"])
-    ws.append(["2024-01-12", "iPad", "Sucursal Norte", 4])
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=distribucion.xlsx'
-    wb.save(response)
-    return response
-
-def generar_reporte_distribucion_pdf(fecha_inicio, fecha_fin, region, producto):
-    buffer = io.BytesIO()
-    p = canvas.Canvas(buffer)
-    p.drawString(100, 800, "Reporte de Distribución")
-    p.drawString(100, 780, f"Producto: {producto}, Región: {region}")
-    p.drawString(100, 760, "Ejemplo de distribución registrada.")
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return HttpResponse(buffer, content_type='application/pdf')
+def generar_reporte_distribucion_pdf(fecha_inicio, fecha_fin):
+    # Implementar la lógica para generar el reporte de distribución en PDF
+    pass
+def generar_reporte_distribucion_excel(fecha_inicio, fecha_fin):
+    # Implementar la lógica para generar el reporte de distribución en Excel
+    pass

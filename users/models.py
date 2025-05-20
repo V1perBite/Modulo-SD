@@ -16,7 +16,7 @@ class UserManager(BaseUserManager):
         role_data  = None,
         base_data  = None,
         user_type='usuario',
-    ) -> "Usuarios":
+    ) -> "Usuario":
         """
         This is a private method that handles the creation of a user instance.
         Optionally it can associate to a model instance that encapsulates the user
@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
 
         email = base_data.pop("email")
         password = base_data.pop("password")
-        user: "Usuarios" = self.model(
+        user: "Usuario" = self.model(
             email=self.normalize_email(email),
             user_type=user_type,  # Asignar el tipo de usuario
 
@@ -103,7 +103,7 @@ class UserManager(BaseUserManager):
     
     
 # Create your models here.
-class Usuarios(AbstractBaseUser, PermissionsMixin):
+class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=10)
     address = models.CharField(max_length=100)
@@ -112,16 +112,14 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default= False)
     date_joined = models.DateTimeField(auto_now_add=True)    
-    objects: UserManager = UserManager()
-    
     
     # Campo para identificar el tipo de usuario
     USER_TYPE_CHOICES = (
-        ('paciente', 'Paciente'),
-        ('doctor', 'Doctor'),
+        ('usuario', 'Usuario'),
+        ('admin', 'Admin'),
         ('superuser', 'Superusuario'),
     )
-    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='paciente')
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='usuario')
 
     objects = UserManager()
 
@@ -145,3 +143,28 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
         fk_field="role_data_id",
     )
     
+    @property
+    def full_name(self):
+        return f"{self.name} {self.lastName}"
+
+    @property
+    def role(self):
+        if self.content_object:
+            return self.content_object.__class__.__name__.lower()
+        return self.user_type
+
+    def __str__(self):
+        return self.full_name
+    
+class Usuarios(models.Model):
+    name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    date_of_birth = models.DateField()
+    address = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=10)
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    # opcional: relación explícita con Usuario (si no usas GenericForeignKey):
+    # user = models.OneToOneField('Usuario', on_delete=models.CASCADE, related_name='perfil', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name} {self.last_name}"

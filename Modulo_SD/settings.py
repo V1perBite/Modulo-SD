@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'reportes',
     'rest_framework',
     'users',
+    'drf_spectacular',
+    
 ]
 
 MIDDLEWARE = [
@@ -126,7 +128,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = "users.Usuario"  
+AUTH_USER_MODEL = "users.User"  
 
 LOGIN_URL = '/' 
 
@@ -140,3 +142,8 @@ if 'test' in sys.argv:
             'NAME': ':memory:',
         }
     }
+    
+AUTHENTICATION_BACKENDS = [
+    'users.serializers.EmailBackend',  # Ruta donde está definida la clase
+    'django.contrib.auth.backends.ModelBackend',
+]

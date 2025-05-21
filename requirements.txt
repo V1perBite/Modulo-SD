@@ -17,3 +17,4 @@ psycopg2-binary
 
 # Otras herramientas útiles (ajusta según tu stack)
 djangorestframework 
+drf-spectacular
